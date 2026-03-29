@@ -71,6 +71,7 @@ public class AuthController {
         if (!service.verifyPassword(user.getPassword(), password)) {
             throw new IllegalArgumentException("Password incorrect. {/auth/controllers/AuthController.java}");
         }
+        jwtService.rotateKey();
         rTokenService.deleteToken(username);
         return "Logged out successfully.";
     }
