@@ -1,0 +1,38 @@
+package com.david.todoist.auth.services;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.david.todoist.auth.AppUser;
+import com.david.todoist.auth.repos.UserRepo;
+
+@Service
+public class UserService implements UserDetailsService {
+    @Autowired
+    private UserRepo userRepo;
+
+    public AppUser save(AppUser user) {
+        return userRepo.save(user);
+    }
+
+
+    public AppUser deleteByUsername(String username) {
+        return userRepo.deleteByUsername(username);
+    }
+
+    public AppUser findByUsername(String username) {
+        return userRepo.findUserByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        if (userRepo.findUserByUsername(username) != null) {
+            return userRepo.findUserByUsername(username);
+        }
+        throw new UsernameNotFoundException("User not found {auth/services/UserService.java}");
+    }
+}
