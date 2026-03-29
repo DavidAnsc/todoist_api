@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,7 +52,7 @@ public class AuthController {
             throw new IllegalArgumentException("Can't find 'refreshToken' or/and 'username' field in the body. {/auth/controllers/AuthController.java}");
         }
         AppUser user = service.findByUsername(username);
-        if (!user.getPassword().equals(password)) {
+        if (!service.verifyPassword(user.getPassword(), password)) {
             throw new IllegalArgumentException("Password incorrect. {/auth/controllers/AuthController.java}");
         }
         jwtService.rotateKey();
@@ -67,10 +68,9 @@ public class AuthController {
             throw new IllegalArgumentException("Can't find 'refreshToken' or/and 'username' field in the body. {/auth/controllers/AuthController.java}");
         }
         AppUser user = service.findByUsername(username);
-        if (!user.getPassword().equals(password)) {
+        if (!service.verifyPassword(user.getPassword(), password)) {
             throw new IllegalArgumentException("Password incorrect. {/auth/controllers/AuthController.java}");
         }
-        jwtService.rotateKey();
         rTokenService.deleteToken(username);
         return "Logged out successfully.";
     }
