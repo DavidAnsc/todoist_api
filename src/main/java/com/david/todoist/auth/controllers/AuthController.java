@@ -67,9 +67,10 @@ public class AuthController {
             throw new IllegalArgumentException("Can't find 'refreshToken' or/and 'username' field in the body. {/auth/controllers/AuthController.java}");
         }
         AppUser user = service.findByUsername(username);
-        if (user.getPassword() != password) {
+        if (!user.getPassword().equals(password)) {
             throw new IllegalArgumentException("Password incorrect. {/auth/controllers/AuthController.java}");
         }
+        jwtService.rotateKey();
         rTokenService.deleteToken(username);
         return "Logged out successfully.";
     }

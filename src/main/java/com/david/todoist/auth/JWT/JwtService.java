@@ -61,11 +61,6 @@ public class JwtService {
         return expiration.before(new Date());
     }
 
-    private void thing(String token) {
-        Claims claims = extractAllClaims(token);
-        
-    }
-
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
