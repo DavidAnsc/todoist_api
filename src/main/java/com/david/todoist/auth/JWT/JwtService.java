@@ -7,8 +7,13 @@ import java.util.Map;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.david.todoist.auth.AppUser;
+import com.david.todoist.auth.services.UserService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -18,15 +23,52 @@ public class JwtService {
 
     private Map<String, Object> claims = new HashMap<>();
     private SecretKey secretKey;
-    private SecretKey alt;
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private JTokenRepo jTokenRepo;
+
+    public boolean isTokenBlacklisted(String token) {
+        if (token == null || token.isBlank()) {
+            return false;
+        }
+
+        return jTokenRepo.findAll().stream()
+                .anyMatch(object -> token.equals(object.getToken()));
+    }
+
+    public void blacklistToken(String username, String token) {
+        AppUser user = userService.findByUsername(username);
+        JToken jToken = new JToken();
+
+        jToken.setUser(user);
+        jToken.setToken(token);
+        jToken.setExpiry(this.extractAllClaims(token).getExpiration());
+        
+        jTokenRepo.save(jToken);
+    }
+
+    public synchronized void refreshList() {
+        jTokenRepo.findAll().forEach(object -> {
+            if (object.getExpiry().before(new Date())) {
+                jTokenRepo.delete(object);
+            }
+        });
+    }
+
 
     public JwtService() throws Exception {
         KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
         this.secretKey = keyGenerator.generateKey();
-        this.alt = keyGenerator.generateKey();
     }
 
     public String generateToken(String username) {
+        AppUser user = userService.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Couldn't find the user based on the username {auth/JWT/JwtService.java}");
+        }
+
         return Jwts.builder()
                 .claims()
                     .add(claims)
@@ -36,12 +78,6 @@ public class JwtService {
                 .and()
                     .signWith(secretKey)
                 .compact();
-    }
-
-    public void rotateKey() {
-        var temp = alt;
-        alt = secretKey;
-        secretKey = temp;
     }
 
 

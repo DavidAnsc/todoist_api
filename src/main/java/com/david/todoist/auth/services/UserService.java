@@ -19,9 +19,7 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public AppUser save(AppUser user) {
-        System.out.println("encrypting password");
         user.setPassword(encoder.encode(user.getPassword()));
-        System.out.println("finished encrypting password");
         return userRepo.save(user);
     }
 

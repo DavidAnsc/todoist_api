@@ -8,4 +8,5 @@ import com.david.todoist.models.TodoList;
 @Repository
 public interface ListRepo extends JpaRepository<TodoList, Long> {
     public TodoList findByTitle(String title);
+    public TodoList deleteByTitle(String title);
 }

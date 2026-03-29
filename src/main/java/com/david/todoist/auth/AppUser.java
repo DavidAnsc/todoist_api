@@ -3,15 +3,20 @@ package com.david.todoist.auth;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.crypto.SecretKey;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.david.todoist.auth.JWT.JToken;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 
 
@@ -27,17 +32,20 @@ public class AppUser implements UserDetails {
     private String password;
     private String email;
 
+    @OneToMany(mappedBy = "user")
+    private Collection<JToken> jTokens;
+
     @Column(nullable = true)
     private Collection<? extends GrantedAuthority> authorities;
-
+    
     
     public AppUser(Collection<? extends GrantedAuthority> authorities) {
         this.authorities = authorities;
     }
     public AppUser() {
     }
-
-
+    
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

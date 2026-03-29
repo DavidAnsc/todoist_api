@@ -13,6 +13,8 @@ import com.david.todoist.auth.JWT.JwtService;
 import com.david.todoist.auth.refresh_tokens.RTokenService;
 import com.david.todoist.auth.services.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,38 +43,39 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public String refreshJWTToken(@RequestBody Map<String, String> entity) {
+    public String refreshJWTToken(@RequestBody Map<String, String> entity, HttpServletRequest request) {
         String token = entity.get("refreshToken");
+        String jToken = request.getHeader("Authorization").substring(7);
         String username = entity.get("username");
         String password = entity.get("password");
-        System.out.println(token);
-        System.out.println(username);
-        System.out.println(password);
+
+        rTokenService.refreshDbStatus();
         if (rTokenService.findByToken(token) == null || token.isBlank() || username.isBlank() || token == null || username == null || password.isBlank() || password == null) {
             throw new IllegalArgumentException("Can't find 'refreshToken' or/and 'username' field in the body. {/auth/controllers/AuthController.java}");
         }
         AppUser user = service.findByUsername(username);
-        if (!service.verifyPassword(user.getPassword(), password)) {
+        if (!service.verifyPassword(user.getPassword(), password) || jToken.isBlank() || jToken == null) {
             throw new IllegalArgumentException("Password incorrect. {/auth/controllers/AuthController.java}");
         }
-        jwtService.rotateKey();
+        jwtService.blacklistToken(username, jToken);
         return jwtService.generateToken(username);
     }
 
     @PostMapping("/logout")
-    public String logout(@RequestBody Map<String, String> entity) {
+    public String logout(@RequestBody Map<String, String> entity, HttpServletRequest request) {
         String token = entity.get("refreshToken");
+        String jToken = request.getHeader("Authorization").substring(7);
         String username = entity.get("username");
         String password = entity.get("password");
         if (rTokenService.findByToken(token) == null || token.isBlank() || username.isBlank() || token == null || username == null || password.isBlank() || password == null) {
             throw new IllegalArgumentException("Can't find 'refreshToken' or/and 'username' field in the body. {/auth/controllers/AuthController.java}");
         }
         AppUser user = service.findByUsername(username);
-        if (!service.verifyPassword(user.getPassword(), password)) {
+        if (!service.verifyPassword(user.getPassword(), password) || jToken.isBlank() || jToken == null) {
             throw new IllegalArgumentException("Password incorrect. {/auth/controllers/AuthController.java}");
         }
-        jwtService.rotateKey();
         rTokenService.deleteToken(username);
+        jwtService.blacklistToken(username, jToken);
         return "Logged out successfully.";
     }
     

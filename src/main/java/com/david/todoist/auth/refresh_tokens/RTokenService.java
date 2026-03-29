@@ -17,6 +17,14 @@ public class RTokenService {
     @Autowired
     private UserService userService;
 
+    public void refreshDbStatus() {
+        rTokenRepo.findAll().stream().forEach(object -> {
+            if (object.getExpiry().before(new Date())) {
+                rTokenRepo.delete(object);
+            }
+        });
+    }
+
     public RefreshToken findByToken(String token) {
         return rTokenRepo.findByToken(token);
     }
@@ -43,7 +51,8 @@ public class RTokenService {
 
     public void deleteToken(String username) {
         rTokenRepo.findAll().stream().forEach(object -> {
-            if (object.getUser().getUsername() == username) {
+            if (object.getUser().getUsername().equals(username)) {
+                System.out.println(object.getUser().getUsername());
                 RefreshToken token = object;
                 rTokenRepo.delete(token);
             }
