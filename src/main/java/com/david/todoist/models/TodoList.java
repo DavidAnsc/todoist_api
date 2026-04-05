@@ -18,13 +18,12 @@ public class TodoList {
     @SequenceGenerator(name = "list_id_seq", sequenceName = "list_id_seq")
     private long id;
 
-    @OneToMany
-    @JoinColumn(name="todo_id_list", referencedColumnName = "id")
+    @OneToMany(mappedBy = "todoList")
     private Collection<Todo> todos;
     
     @Column(unique = true)
     private String title;
-    
+
     private String icon;
     
     public Collection<Todo> getTodos() {
@@ -47,5 +46,8 @@ public class TodoList {
     }
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+    public void setId(long id) {
+      this.id = id;
     }
 }

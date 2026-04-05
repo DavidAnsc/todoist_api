@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 
 @Entity
@@ -19,6 +21,10 @@ public class Todo {
     private String description;
     private Priorities priority;
     private boolean status; // true for finished
+
+    @ManyToOne
+    @JoinColumn(name = "todolist_id", referencedColumnName = "id")
+    private TodoList todoList;
 
 
     public Todo() {
@@ -50,5 +56,11 @@ public class Todo {
     }
     public void setStatus(boolean status) {
         this.status = status;
+    }
+    public TodoList getTodoList() {
+        return todoList;
+    }
+    public void setTodoList(TodoList todoList) {
+        this.todoList = todoList;
     }
 }

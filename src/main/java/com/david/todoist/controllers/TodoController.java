@@ -1,6 +1,7 @@
 package com.david.todoist.controllers;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,6 @@ import com.david.todoist.repos.TodoRepo;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -30,6 +30,12 @@ public class TodoController {
 
     @PostMapping("/addTodo")
     public Todo addTodo(@RequestBody Todo todo) {
+        if (todo.getTodoList() != null) {
+            long listId = todo.getTodoList().getId();
+            TodoList existingList = listRepo.findById(listId)
+                    .orElseThrow(() -> new NoSuchElementException("TodoList not found: " + listId));
+            todo.setTodoList(existingList);
+        }
         return todoRepo.save(todo);
     }
 
