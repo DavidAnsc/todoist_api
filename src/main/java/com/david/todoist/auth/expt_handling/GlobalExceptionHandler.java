@@ -83,13 +83,13 @@ public class GlobalExceptionHandler {
     return error;
   }
 
-  // @ExceptionHandler(Exception.class)
-  // @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  // public APIError handleGeneralException(Exception err, HttpServletRequest request) {
-  //   APIError error = new APIError();
-  //   error.setStatus(500);
-  //   error.setError("Internal Server Error");
-  //   error.setMessage(err.getMessage());
-  //   return error;
-  // }
+  @ExceptionHandler(Exception.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public APIError handleGeneralException(Exception err, HttpServletRequest request) {
+    APIError error = new APIError();
+    error.setStatus(500);
+    error.setError("Internal Server Error");
+    error.setMessage(err.getMessage());
+    return error;
+  }
 }

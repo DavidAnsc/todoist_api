@@ -98,6 +98,7 @@ public class AuthController {
           httpResponse.addCookie(refreshCookie);
 
           return response;
+
         } else {
           throw new BadCredentialsException("The username doesn't match.");
         }
@@ -126,6 +127,7 @@ public class AuthController {
           httpResponse.addCookie(refreshCookie);
           
           return response;
+
         } else {
           throw new BadCredentialsException("The email doesn't match.");
         }
@@ -136,8 +138,7 @@ public class AuthController {
   }
 
   @PostMapping("/refresh")
-  public ResponseObject refreshJWTToken(@RequestBody Map<String, String> entity, HttpServletRequest httpRequest)
-      throws Exception {
+  public ResponseObject refreshJWTToken(@RequestBody Map<String, String> entity, HttpServletRequest httpRequest) throws Exception {
     Optional<String> jwtToken = entity.containsKey("jwt") ? Optional.of(entity.get("jwt")) : Optional.empty();
     Cookie[] refreshCookies = httpRequest.getCookies();
 
@@ -165,7 +166,7 @@ public class AuthController {
     }
 
     String username;
-    if (jwtToken.isEmpty()) {
+    if (jwtToken.isEmpty() || jwtToken.get() == null) {
       username = rTokenService.findByToken(refreshToken).getUser().getUsername();
     } else {
       username = jwtService.extractUsername(jwtToken.get());
@@ -215,6 +216,7 @@ public class AuthController {
     refreshToken.setHttpOnly(true);
     refreshToken.setPath("/");
     refreshToken.setMaxAge(0);
+    
     httpResponse.addCookie(refreshToken);
 
     AppUser user = rTokenService.findByToken(token).getUser();

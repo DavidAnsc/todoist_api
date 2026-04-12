@@ -1,4 +1,8 @@
-# Todos
-TODO: implement the logout clear cookie logic on the endpoint. SOLVED
+# HIGH
+[] add the "uniqueness check" for username and emails. Frontend & Backend
+[x] implement the logout clear cookie logic on the endpoint.
 
-TODO: fix the email log in logic.
+
+
+# MED
+[x] fix the email login logic.
