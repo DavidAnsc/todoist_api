@@ -9,5 +9,7 @@ import com.david.todoist.auth.AppUser;
 public interface UserRepo extends JpaRepository<AppUser, Long> {
     public AppUser findUserByUsername(String username);
 
-    public AppUser deleteByUsername(String username);
+    public AppUser findUserByEmail(String email);
+
+    public void deleteByUsername(String username);
 }

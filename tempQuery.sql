@@ -1,0 +1,1 @@
+TRUNCATE TABLE refresh_token RESTART IDENTITY;

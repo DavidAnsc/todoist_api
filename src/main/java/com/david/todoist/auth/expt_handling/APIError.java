@@ -1,0 +1,42 @@
+package com.david.todoist.auth.expt_handling;
+
+import java.util.Date;
+
+public class APIError extends RuntimeException {
+  private String message;
+  private Date timestamp;
+  private int status;
+  private String error;
+  
+  
+  public APIError() {
+    this.timestamp = new Date();
+  }
+  
+  public String getError() {
+    return error;
+  }
+  public void setError(String error) {
+    this.error = error;
+  }
+  public String getMessage() {
+    return message;
+  }
+  public void setMessage(String message) {
+    this.message = message;
+  }
+  public Date getTimestamp() {
+    return timestamp;
+  }
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
+  public int getStatus() {
+    return status;
+  }
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+  
+}

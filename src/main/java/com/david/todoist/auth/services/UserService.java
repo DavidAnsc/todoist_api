@@ -23,13 +23,14 @@ public class UserService implements UserDetailsService {
         return userRepo.save(user);
     }
 
-
-    public AppUser deleteByUsername(String username) {
-        return userRepo.deleteByUsername(username);
+    
+    
+    public void deleteByUsername(String username) {
+      userRepo.deleteByUsername(username);
     }
-
-    public AppUser findByUsername(String username) {
-        return userRepo.findUserByUsername(username);
+    
+    public AppUser findByEmail(String email) {
+      return userRepo.findUserByEmail(email);
     }
 
     public boolean verifyPassword(String encodedPassword, String rawPassword) {
@@ -37,10 +38,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (userRepo.findUserByUsername(username) != null) {
-            return userRepo.findUserByUsername(username);
-        }
-        throw new UsernameNotFoundException("User not found {auth/services/UserService.java}");
+    public AppUser loadUserByUsername(String username) throws UsernameNotFoundException {
+      return userRepo.findUserByUsername(username);
     }
 }

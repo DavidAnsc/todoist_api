@@ -27,9 +27,12 @@ public class AppUser implements UserDetails {
     @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
     private long id;
 
+    @Column(unique=true)
     private String username;
     private String displayName;
     private String password;
+    
+    @Column(unique=true)
     private String email;
 
     @OneToMany(mappedBy = "user")

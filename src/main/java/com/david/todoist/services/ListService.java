@@ -2,11 +2,13 @@ package com.david.todoist.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.david.todoist.models.TodoList;
 import com.david.todoist.repos.ListRepo;
 
 @Service
+@Transactional
 public class ListService {
     @Autowired
     private ListRepo listRepo;

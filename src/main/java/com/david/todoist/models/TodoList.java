@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 
@@ -25,7 +26,29 @@ public class TodoList {
     private String title;
 
     private String icon;
+
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    private TodoList parent;
+
+    @OneToMany(mappedBy = "parent")
+    private Collection<TodoList> children;
+
+    public TodoList() {
+    }
     
+    public TodoList getParent() {
+      return parent;
+    }
+    public void setParent(TodoList parent) {
+      this.parent = parent;
+    }
+    public Collection<TodoList> getChildren() {
+      return children;
+    }
+    public void setChildren(Collection<TodoList> children) {
+      this.children = children;
+    }
     public Collection<Todo> getTodos() {
         return todos;
     }

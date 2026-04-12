@@ -34,7 +34,7 @@ public class RTokenService {
         token.setToken(UUID.randomUUID().toString());
         token.setExpiry(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 48));
         
-        AppUser user = userService.findByUsername(username);
+        AppUser user = userService.loadUserByUsername(username);
         
         if (user == null) {
             throw new UsernameNotFoundException("Username not found {/auth/refresh_tokens/RTokenService.java}");

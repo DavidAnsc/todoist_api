@@ -39,7 +39,7 @@ public class JwtService {
     }
 
     public void blacklistToken(String username, String token) {
-        AppUser user = userService.findByUsername(username);
+        AppUser user = userService.loadUserByUsername(username);
         JToken jToken = new JToken();
 
         jToken.setUser(user);
@@ -64,7 +64,7 @@ public class JwtService {
     }
 
     public String generateToken(String username) {
-        AppUser user = userService.findByUsername(username);
+        AppUser user = userService.loadUserByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("Couldn't find the user based on the username {auth/JWT/JwtService.java}");
         }
