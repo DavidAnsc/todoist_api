@@ -39,7 +39,7 @@ public class SecurityConfig {
             .csrf(customizer -> customizer.disable())
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests((customizer) -> {
-                customizer.requestMatchers("/auth/login", "/auth/register", "/auth/refresh").permitAll();
+                customizer.requestMatchers("/auth/login", "/auth/register", "/auth/refresh", "/auth/verify").permitAll();
                 customizer.anyRequest().authenticated();
             })
             .formLogin(AbstractHttpConfigurer::disable)

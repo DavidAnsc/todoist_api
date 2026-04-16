@@ -2,6 +2,7 @@ package com.david.todoist.services;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,15 @@ public class TodoService {
         return todoRepo.save(todo);
     }
 
-    public Collection<Todo> findAllByTitle(String title) {
-        return todoRepo.findAllByTitle(title);
+    public Todo findById(Long id) {
+      return todoRepo.findById(id).get();
     }
 
     public void delete(long id) {
         todoRepo.deleteById(id);
+    }
+
+    public List<Todo> findAll() {
+      return todoRepo.findAll();
     }
 }

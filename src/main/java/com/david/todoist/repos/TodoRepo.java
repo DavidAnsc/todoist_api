@@ -10,4 +10,5 @@ import com.david.todoist.models.Todo;
 @Repository
 public interface TodoRepo extends JpaRepository<Todo, Long> {
     public Collection<Todo> findAllByTitle(String title);
+    public void deleteByTodoList_Id(Long todoListId);
 }

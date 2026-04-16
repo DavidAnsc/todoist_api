@@ -1,6 +1,7 @@
 package com.david.todoist.controllers;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,64 +18,81 @@ import com.david.todoist.models.TodoList;
 import com.david.todoist.repos.ListRepo;
 import com.david.todoist.repos.TodoRepo;
 import com.david.todoist.services.ListService;
+import com.david.todoist.services.TodoService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @RequestMapping("/app")
 public class TodoController {
-    @Autowired
-    private TodoRepo todoRepo;
-    @Autowired
-    private ListRepo listRepo;
-    @Autowired
-    private ListService listService;
+  @Autowired
+  private TodoService todoService;
+  @Autowired
+  private ListRepo listRepo;
+  @Autowired
+  private ListService listService;
 
-
-    @PostMapping("/addTodo")
-    public Todo addTodo(@RequestBody Todo todo) {
-      try {
-        if (todo.getTodoList() != null) {
-            long listId = todo.getTodoList().getId();
-            TodoList existingList = listRepo.findById(listId)
-                    .orElseThrow(() -> new NoSuchElementException("TodoList not found: " + listId));
-            todo.setTodoList(existingList);
-        }
-        return todoRepo.save(todo);
-      } catch (NoSuchElementException e) {
-        throw new UnprocessableBodyException(e.getMessage());
-      } catch (Exception e) {
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while processing the request");
+  @PostMapping("/addTodo")
+  public Todo addTodo(@RequestBody Todo todo) {
+    try {
+      if (todo.getTitle() == null || todo.getTitle().isBlank()) {
+        throw new UnprocessableBodyException("Todo title is required");
       }
-    }
+      if (todo.getTodoList() == null || todo.getTodoList().getId() == 0) {
+        throw new UnprocessableBodyException("Todo must belong to a TodoList");
+      }
 
-    @DeleteMapping("/delTodo")
-    public void deleteTodo(@RequestParam long id) {
-        todoRepo.deleteById(id);
+      long listId = todo.getTodoList().getId();
+      TodoList existingList = listRepo.findById(listId)
+          .orElseThrow(() -> new NoSuchElementException("TodoList not found: " + listId));
+      todo.setTodoList(existingList);
+      return todoService.save(todo);
+    } catch (NoSuchElementException e) {
+      throw new UnprocessableBodyException(e.getMessage());
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+          "An error occurred while processing the request");
     }
+  }
 
-    @PostMapping("/addList")
-    public TodoList addList(@RequestBody TodoList list) {
-        return listRepo.save(list);
-    }
+  @PostMapping("/editTodo")
+  public Todo editTodo(@RequestBody Todo entity) {
+    todoService.save(entity);
+    return entity;
+  }
 
-    @DeleteMapping("/delList")
-    public void deleteList(@RequestParam String title) {
-      listService.deleteByTitle(title);
-    }
+  @PostMapping("/editList")
+  public TodoList editList(@RequestBody TodoList entity) {
+    listService.save(entity);
+    return entity;
+  }
+  
 
-    @GetMapping("/allTodos")
-    public Collection<Todo> getAllTodos() {
-        return todoRepo.findAll();
-    }
+  @DeleteMapping("/delTodo")
+  public void deleteTodo(@RequestParam("id") long id) {
+    System.out.println(id);
+    todoService.delete(id);
+  }
 
-    @GetMapping("/todos")
-    public Collection<Todo> getTodosByList(@RequestParam(name = "title") String listTitle) {
-        return listRepo.findByTitle(listTitle).getTodos();
-    }
-    
-    
+  @PostMapping("/addList")
+  public TodoList addList(@RequestBody TodoList list) {
+    return listRepo.save(list);
+  }
+
+  @DeleteMapping("/delList")
+  public void deleteList(@RequestParam("id") long id) {
+    listService.deleteById(id);
+  }
+
+  @GetMapping("/allTodos")
+  public Collection<Todo> getAllTodos() {
+    return todoService.findAll();
+  }
+  @GetMapping("/allLists")
+  public List<TodoList> getMethodName() {
+      return listService.findAll();
+  }
+  
 }

@@ -2,6 +2,8 @@ package com.david.todoist.models;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,10 +21,10 @@ public class TodoList {
     @SequenceGenerator(name = "list_id_seq", sequenceName = "list_id_seq")
     private long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "todoList")
     private Collection<Todo> todos;
     
-    @Column(unique = true)
     private String title;
 
     private String icon;
@@ -31,6 +33,7 @@ public class TodoList {
     @JoinColumn(referencedColumnName = "id")
     private TodoList parent;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parent")
     private Collection<TodoList> children;
 

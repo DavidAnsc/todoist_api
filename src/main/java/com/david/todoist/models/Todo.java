@@ -1,6 +1,7 @@
 package com.david.todoist.models;
 
 import com.david.todoist.enums.Priorities;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ public class Todo {
 
     private String title;
     private String description;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Priorities priority;
     private boolean status; // true for finished
 
@@ -29,6 +31,16 @@ public class Todo {
 
     public Todo() {
     }
+
+    public Todo(long id, String title, String description, Priorities priority, boolean status, TodoList todoList) {
+      this.id = id;
+      this.title = title;
+      this.description = description;
+      this.priority = priority;
+      this.status = status;
+      this.todoList = todoList;
+    }
+
 
     public long getId() {
         return id;

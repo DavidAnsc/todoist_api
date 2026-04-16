@@ -52,6 +52,20 @@ public class AuthController {
     }
   }
 
+  @PostMapping("/verify")
+  public Boolean verifyUsernamePassword(@RequestBody AppUser entity) {
+    if (service.findByEmail(entity.getEmail()) != null) {
+      return false;
+    }
+
+    if (service.loadUserByUsername(entity.getUsername()) != null) {
+      return false;
+    }
+
+    return true;
+  }
+  
+
   @GetMapping("/getUserInfo")
   public AppUser getInfo(HttpServletRequest httpRequest) {
     String jToken = httpRequest.getHeader("Authorization").substring(7);
