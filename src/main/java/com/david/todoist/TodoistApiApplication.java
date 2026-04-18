@@ -13,23 +13,5 @@ public class TodoistApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TodoistApiApplication.class, args);
 	}
-
-	@Bean
-	CommandLineRunner commandLineRunner(JwtService jwtService) {
-		return args -> {
-			Thread bgUpdate = new Thread(() -> {
-				while (true) {
-					try {
-						Thread.sleep(10_000);
-						
-						jwtService.refreshList();
-					} catch (InterruptedException e) {
-					}
-				}
-			});
-
-			bgUpdate.start();
-		};
-	}
 }
 
