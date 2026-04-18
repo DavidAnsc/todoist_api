@@ -13,13 +13,25 @@ import com.david.todoist.repos.TodoRepo;
 @Service
 @Transactional
 public class ListService {
-    @Autowired
-    private ListRepo listRepo;
+  @Autowired
+  private ListRepo listRepo;
   @Autowired
   private TodoRepo todoRepo;
 
     public TodoList findByTitle(String title) {
         return listRepo.findByTitle(title);
+    }
+
+    public List<TodoList> findAllByUserId(long id) {
+      return listRepo.findAllByUserId(id);
+    }
+
+    public TodoList findById(Long id) {
+      if (listRepo.findById(id).isEmpty()) {
+        return null;
+      } else {
+        return listRepo.findById(id).get();
+      }
     }
 
     public List<TodoList> findAll() {
@@ -34,7 +46,7 @@ public class ListService {
         listRepo.deleteByTitle(title);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
       todoRepo.deleteByTodoList_Id(id);
       listRepo.deleteById(id);
     }

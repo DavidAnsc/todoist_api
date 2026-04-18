@@ -19,8 +19,16 @@ public class TodoService {
         return todoRepo.save(todo);
     }
 
-    public Todo findById(Long id) {
-      return todoRepo.findById(id).get();
+    public Todo findById(long id) {
+      Optional<Todo> todo = todoRepo.findById(id);
+      if (todo.isEmpty()) {
+        return null;
+      }
+      return todo.get();
+    }
+
+    public List<Todo> findAllByUserId(long id) {
+      return todoRepo.findAllByTodoListUserId(id);
     }
 
     public void delete(long id) {

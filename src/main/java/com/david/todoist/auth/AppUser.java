@@ -10,6 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.david.todoist.auth.JWT.JToken;
+import com.david.todoist.models.TodoList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,20 +37,37 @@ public class AppUser implements UserDetails {
     @Column(unique=true)
     private String email;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    // @Column(nullable = true)
+    private Collection<TodoList> todoLists;
+
     @OneToMany(mappedBy = "user")
     private Collection<JToken> jTokens;
-
+    
     @Column(nullable = true)
     private Collection<? extends GrantedAuthority> authorities;
     
     
     public AppUser(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = authorities;
+      this.authorities = authorities;
     }
     public AppUser() {
     }
     
     
+    public Collection<TodoList> getTodoLists() {
+      return todoLists;
+    }
+    public void setTodoLists(Collection<TodoList> todoLists) {
+      this.todoLists = todoLists;
+    }
+    public Collection<JToken> getjTokens() {
+      return jTokens;
+    }
+    public void setjTokens(Collection<JToken> jTokens) {
+      this.jTokens = jTokens;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

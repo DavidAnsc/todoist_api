@@ -2,6 +2,7 @@ package com.david.todoist.models;
 
 import java.util.Collection;
 
+import com.david.todoist.auth.AppUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -22,24 +23,37 @@ public class TodoList {
     private long id;
 
     @JsonIgnore
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    // @Column(nullable = true)
+    private AppUser user;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "todoList")
     private Collection<Todo> todos;
     
     private String title;
-
+    
     private String icon;
-
+    
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
     private TodoList parent;
-
+    
     @JsonIgnore
     @OneToMany(mappedBy = "parent")
     private Collection<TodoList> children;
-
+    
     public TodoList() {
     }
     
+    
+    public AppUser getUser() {
+      return user;
+    }
+    public void setUser(AppUser user) {
+      this.user = user;
+    }
     public TodoList getParent() {
       return parent;
     }
