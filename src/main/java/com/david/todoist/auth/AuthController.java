@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.rememberme.CookieTheftException;
 import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -121,9 +119,6 @@ public class AuthController {
       }
     } else {
       AppUser user = service.findByEmail(email);
-      // if (user == null) {
-      //   throw new BadCredentialsException("The email doesn't exist.");
-      // }
       System.out.println(user);
 
       if (service.verifyPassword(user.getPassword(), entity.getPassword())) {

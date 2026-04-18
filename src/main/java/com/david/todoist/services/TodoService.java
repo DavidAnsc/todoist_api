@@ -1,6 +1,5 @@
 package com.david.todoist.services;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,11 +30,7 @@ public class TodoService {
       return todoRepo.findAllByTodoListUserId(id);
     }
 
-    public void delete(long id) {
+    public void deleteById(long id) {
         todoRepo.deleteById(id);
-    }
-
-    public List<Todo> findAll() {
-      return todoRepo.findAll();
     }
 }

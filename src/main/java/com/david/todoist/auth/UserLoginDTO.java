@@ -1,10 +1,5 @@
 package com.david.todoist.auth;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-
 public class UserLoginDTO {
   private String usernameOrEmail;
   private String password;

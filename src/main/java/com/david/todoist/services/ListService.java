@@ -18,36 +18,24 @@ public class ListService {
   @Autowired
   private TodoRepo todoRepo;
 
-    public TodoList findByTitle(String title) {
-        return listRepo.findByTitle(title);
-    }
+  public List<TodoList> findAllByUserId(long id) {
+    return listRepo.findAllByUserId(id);
+  }
 
-    public List<TodoList> findAllByUserId(long id) {
-      return listRepo.findAllByUserId(id);
+  public TodoList findById(Long id) {
+    if (listRepo.findById(id).isEmpty()) {
+      return null;
+    } else {
+      return listRepo.findById(id).get();
     }
+  }
 
-    public TodoList findById(Long id) {
-      if (listRepo.findById(id).isEmpty()) {
-        return null;
-      } else {
-        return listRepo.findById(id).get();
-      }
-    }
+  public TodoList save(TodoList list) {
+    return listRepo.save(list);
+  }
 
-    public List<TodoList> findAll() {
-      return listRepo.findAll();
-    }
-
-    public TodoList save(TodoList list) {
-        return listRepo.save(list);
-    }
-
-    public void deleteByTitle(String title) {
-        listRepo.deleteByTitle(title);
-    }
-
-    public void deleteById(long id) {
-      todoRepo.deleteByTodoList_Id(id);
-      listRepo.deleteById(id);
-    }
+  public void deleteById(long id) {
+    todoRepo.deleteByTodoList_Id(id);
+    listRepo.deleteById(id);
+  }
 }

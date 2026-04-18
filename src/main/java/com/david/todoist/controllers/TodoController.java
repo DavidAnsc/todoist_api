@@ -4,15 +4,12 @@ import com.david.todoist.auth.JWT.JwtService;
 import com.david.todoist.auth.services.UserService;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.david.todoist.auth.AppUser;
 import com.david.todoist.auth.expt_handling.UnprocessableBodyException;
@@ -20,7 +17,6 @@ import com.david.todoist.models.Todo;
 import com.david.todoist.models.TodoDTO;
 import com.david.todoist.models.TodoList;
 import com.david.todoist.repos.ListRepo;
-import com.david.todoist.repos.TodoRepo;
 import com.david.todoist.services.ListService;
 import com.david.todoist.services.TodoService;
 
@@ -156,7 +152,7 @@ public class TodoController {
     if (!todo.getTodoList().getUser().getUsername().equals(jwtService.extractUsername(jwtToken))) {
       throw new UnprocessableBodyException("You cannot delete a todo from other user.");
     }
-    todoService.delete(id);
+    todoService.deleteById(id);
   }
   @DeleteMapping("/delList")
   public void deleteList(@RequestParam long id, HttpServletRequest httpRequest) {

@@ -21,6 +21,7 @@ public class Todo {
     private String title;
     private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    // Java uses the default enum convertion method: LOW -> 0, MED -> 1, HIGH -> 2
     private Priorities priority;
     private boolean status; // true for finished
 

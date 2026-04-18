@@ -1,11 +1,7 @@
 package com.david.todoist.auth;
 
-import java.util.Arrays;
 import java.util.Collection;
 
-import javax.crypto.SecretKey;
-
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
